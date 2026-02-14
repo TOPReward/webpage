@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="TOPReward: Token Probabilities as Hidden Zero-Shot Rewards for Robotics - A zero-shot progress estimation framework using VLM token likelihoods for robotic manipulation.">
+  <meta name="keywords" content="TOPReward, Token Probabilities, Zero-Shot Rewards, Robot Manipulation, Reinforcement Learning, Vision-Language Models, ManiRewardBench, VLM, Robotics">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TOPReward: Token Probabilities as Hidden Zero-Shot Rewards for Robotics</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #7c3aed;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --bg-light: #f8fafc;
+      --bg-dark: #0f172a;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      color: var(--text-primary);
+      background: #fff;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a1a2e 100%);
+      color: white;
+      padding: 80px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .venue-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .authors {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 32px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--bg-dark);
+    }
+
+    .btn-primary:hover {
+      background: #f1f5f9;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--bg-dark);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-outline:hover {
+      background: #f1f5f9;
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* Teaser */
+    .teaser {
+      padding: 60px 0 40px;
+      background: var(--bg-light);
+    }
+
+    .teaser-img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    }
+
+    .teaser-caption {
+      max-width: 900px;
+      margin: 24px auto 0;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .teaser-caption b {
+      color: var(--text-primary);
+    }
+
+    /* Section Styles */
+    section {
+      padding: 70px 0;
+    }
+
+    section.alt-bg {
+      background: var(--bg-light);
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title .icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .prose {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .prose p {
+      margin-bottom: 16px;
+    }
+
+    .prose strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Key Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    /* Method Components */
+    .method-figure {
+      margin: 30px 0;
+    }
+
+    .method-figure img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .method-figure figcaption {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .component-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.2s;
+    }
+
+    .component-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+
+    .component-num {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .component-card h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .component-card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Results Tables */
+    .results-table-container {
+      overflow-x: auto;
+      margin: 30px 0;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .results-table th,
+    .results-table td {
+      padding: 14px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-table th {
+      background: var(--bg-light);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .results-table tr:hover {
+      background: #f8fafc;
+    }
+
+    .results-table .highlight-row {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.08), rgba(6, 182, 212, 0.08));
+      font-weight: 600;
+    }
+
+    .results-table .highlight-row td {
+      color: var(--text-primary);
+    }
+
+    .results-table .method-name {
+      text-align: left;
+      font-weight: 500;
+    }
+
+    /* Figure Grid */
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 30px;
+      margin: 30px 0;
+    }
+
+    .figure-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .figure-item img {
+      width: 100%;
+      display: block;
+    }
+
+    .figure-item figcaption {
+      padding: 16px 20px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: var(--bg-light);
+    }
+
+    .figure-item figcaption strong {
+      color: var(--text-primary);
+    }
+
+    .full-figure {
+      margin: 30px 0;
+    }
+
+    .full-figure img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .full-figure figcaption {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Video Sections */
+    .video-section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 40px 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--primary);
+      display: inline-block;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 30px;
+    }
+
+    .video-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .video-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .video-card video {
+      width: 100%;
+      display: block;
+    }
+
+    .video-card .video-label {
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: var(--bg-light);
+      text-align: center;
+    }
+
+    .video-placeholder {
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    /* Key Findings */
+    .findings-list {
+      list-style: none;
+      margin: 24px 0;
+    }
+
+    .findings-list li {
+      padding: 16px 20px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .findings-list li::before {
+      content: '✓';
+      width: 24px;
+      height: 24px;
+      background: var(--success);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .findings-list strong {
+      color: var(--text-primary);
+    }
+
+    /* BibTeX */
+    .bibtex-box {
+      background: var(--bg-dark);
+      border-radius: 12px;
+      padding: 24px;
+      overflow-x: auto;
+    }
+
+    .bibtex-box pre {
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-dark);
+      color: rgba(255,255,255,0.7);
+      padding: 40px 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .check { color: green; font-weight: bold; }
+    .cross { color: red; font-weight: bold; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+      }
+
+      .figure-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1><span class="highlight">TOPReward</span>: Token Probabilities as Hidden<br>Zero-Shot Rewards for Robotics</h1>
+      <p class="authors">
+        <a href="#" style="color: inherit; text-decoration: none;">Shirui Chen</a><sup>1,2</sup>,
+        <a href="#" style="color: inherit; text-decoration: none;">Cole Harrison</a><sup>3</sup>,
+        <a href="#" style="color: inherit; text-decoration: none;">Ying-Chun Lee</a><sup>1</sup>,
+        <a href="#" style="color: inherit; text-decoration: none;">Angela Jin Yang</a><sup>1</sup>,
+        <a href="#" style="color: inherit; text-decoration: none;">Jason Ren</a><sup>1,2,4</sup>,
+        <a href="#" style="color: inherit; text-decoration: none;">Lillian J. Ratliff</a><sup>1</sup>, <br>
+        <a href="https://duanjiafei.com/" style="color: inherit; text-decoration: none;">Jiafei Duan</a><sup>1,2</sup><sup>*</sup>,
+        <a href="https://www.ranjaykrishna.com/index.html" style="color: inherit; text-decoration: none;">Ranjay Krishna</a><sup>1,2</sup><sup>*</sup>,
+        <a href="https://homes.cs.washington.edu/~fox/" style="color: inherit; text-decoration: none;">Dieter Fox</a><sup>1,2</sup><sup>*</sup>
+      </p>
+      <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+        University of Washington<sup>1</sup> &nbsp;&nbsp;|&nbsp;&nbsp;
+        Allen Institute for AI<sup>2</sup> &nbsp;&nbsp;|&nbsp;&nbsp;
+        Independent Researcher<sup>3</sup> &nbsp;&nbsp;|&nbsp;&nbsp;
+        University of North Carolina<sup>4</sup>
+      </p>
+      <p style="font-size: 0.9rem; color: rgba(255,255,255,0.9); margin-bottom: 20px;">
+        <sup>*</sup>Co-advised
+      </p>
+      <div class="btn-group">
+        <a href="#" class="btn btn-primary">
+          <i class="fas fa-file-pdf"></i> Paper
+        </a>
+        <a href="#" class="btn btn-outline" target="_blank">
+          <i class="ai ai-arxiv"></i> arXiv
+        </a>
+        <a href="#" class="btn btn-outline" target="_blank">
+          <i class="fab fa-github"></i> Code
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Teaser -->
+<section class="teaser">
+  <div class="container" style="text-align: center;">
+    <img src="./static/images/Figure1.png" alt="TOPReward Overview" width="80%" style="height: auto;">
+    <p class="teaser-caption">
+      <b>TOPReward</b> enables effective zero-shot estimation of task progress across diverse and challenging real-world manipulation tasks, 
+      without task-specific training. By bootstrapping on a range of vision-language model backbones, TOPReward provides a temporally 
+      consistent visual reward signal that supports downstream applications including success detection and policy improvement. Moreover, we introduce our in-house robotics reward benchmark, <b>ManiRewardBench</b>.
+    </p>
+  </div>
+</section>
+
+<!-- Abstract -->
+<section>
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-align-left"></i></span>
+      Abstract
+    </h2>
+    <div class="prose">
+      <p>
+        While Vision-Language-Action (VLA) models have seen rapid progress in pretraining, 
+        their advancement in Reinforcement Learning (RL) remains hampered by 
+        low sample efficiency and sparse rewards in real-world settings. Developing generalizable
+         process reward models is essential for providing the fine-grained feedback necessary
+          to bridge this gap. However, existing temporal value functions often fail to generalize
+           beyond their training domains. 
+      </p>
+      <p>
+           We introduce <strong>TOPReward</strong>, a novel, probabilistically grounded
+            temporal value function that leverages the latent world knowledge of pretrained video
+             Vision-Language Models (VLMs) to estimate robotic task progress. Unlike prior methods
+              that prompt VLMs to directly output progress values—which are dependent on VLMs' representation of literal numerical tokens—TOPReward extracts task progress directly from the VLM's token probability.
+                We evaluate TOPReward on both the Open X-Embodiment dataset (39 datasets, 780 episodes) and our newly introduced <strong>ManiRewardBench</strong> (113 tasks, 497 episodes across Franka, YAM, and SO-100/101 platforms). Across 130+ distinct real-world tasks, TOPReward achieves 0.945 mean VOC on ManiRewardBench using Qwen3-VL, dramatically outperforming the state-of-the-art
+                baseline, i.e., Generative Value Learning (GVL) whose progress estimation exhibits negligible correlation with the ground truth using the
+                 same open-source VLM. We further demonstrate that TOPReward serves as a versatile tool for downstream
+                 applications, including dataset filtering, success detection, and reward-aligned behavior cloning.
+      </p>
+    </div>
+
+    <!-- Key Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">130+</div>
+        <div class="stat-label">Zero-Shot Real-World Tasks</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">0.945</div>
+        <div class="stat-label">Mean VOC (Qwen3-VL)</div>
+      </div>  
+      <div class="stat-card">
+        <div class="stat-value">3+</div>
+        <div class="stat-label">Robot Platforms Evaluated</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Task-Specific Training Required</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Method -->
+<section class="alt-bg">
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-cogs"></i></span>
+      Method Overview
+    </h2>
+
+    <figure class="method-figure" style="text-align: center;">
+      <img src="./static/images/Figure2.png" alt="TOPReward Example">
+      <figcaption>
+        <strong>Qualitative example of "Fold the Towel”:</strong> Instruction-conditioned progress estimation on a real trajectory. 
+        The curve shows TOPReward's predicted completion value over time, with annotated values at selected frames corresponding to 
+        semantic sub-tasks.
+      </figcaption>
+    </figure>
+
+    <div class="components-grid">
+      <div class="component-card">
+        <div class="component-num">1</div>
+        <h4>Prompted Video–Language Inference</h4>
+        <p>
+          We use the VLM's internal output, i.e., predicted token probabilities as the reward. 
+          Concretely, we ask the model to judge whether the observed trajectory completes the instruction
+           and score the log-likelihood of an affirmative answer (e.g. the token <i>True</i>). 
+        </p>
+      </div>
+
+      <div class="component-card">
+        <div class="component-num">2</div>
+        <h4>Token-Probability Reward Extraction</h4>
+        <p>
+          Compute the log-likelihood of the answer token sequence Completion = "True"
+          This procedure entirely sidesteps the need for the language model to rely 
+          on its instruction-following or numerical generation capabilities.
+        </p>
+      </div>
+
+      <div class="component-card">
+        <div class="component-num">3</div>
+        <h4>Progress estimation from trajectory prefixes</h4>
+        <p>
+          The extracted token probabilities are aligned across time to produce a dense temporal reward function.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIBERO Rollouts -->
+<section class="alt-bg">
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-tasks"></i></span>
+      Lerobot Rollouts
+    </h2>
+
+    <div class="video-grid">
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/car_box.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Pretrained - Place toy car in box <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/car_box_depi.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Behavior Cloning (BC) - Place toy car in box <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/car_box_depi_adv.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">TOP-AWR (Ours) - Place toy car in box <span class="check">&#10003;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/put_cube_cup.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Pretrained - Put cube in cup <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/put_cube_cup_depi.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Behavior Cloning (BC) - Put cube in cup <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/put_cube_cup_depi_adv.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">TOP-AWR (Ours) - Put cube in cup <span class="check">&#10003;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/doll_box.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Pretrained - Place doll in box <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/doll_box_depi.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Behavior Cloning (BC) - Place doll in box <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/doll_box_depi_adv.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">TOP-AWR (Ours) - Place doll in box <span class="check">&#10003;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/pen_cup.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Pretrained - Put pen into cup <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/pen_cup_depi.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Behavior Cloning (BC) - Put pen into cup <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/pen_cup_depi_adv.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">TOP-AWR (Ours) - Put pen into cup <span class="check">&#10003;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/pick_cube.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Pretrained - Pick up cube <span class="cross">&#10007;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/pick_cube_depi.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">Behavior Cloning (BC) - Pick up cube <span class="check">&#10003;</span></div>
+      </div>
+      <div class="video-card">
+        <video autoplay muted loop playsinline>
+          <source src="./static/videos/pick_cube_depi_adv.mp4" type="video/mp4">
+        </video>
+        <div class="video-label">TOP-AWR (Ours) - Pick up cube <span class="check">&#10003;</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quantitative Results -->
+<section>
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-chart-line"></i></span>
+      Quantitative Results
+    </h2>
+
+    <!-- Large-scale Evaluation -->
+    <h3 style="font-size: 1.25rem; font-weight: 600; margin: 30px 0 16px;">
+      Large-Scale Progress Estimation: Logit-Based Rewards Are More Reliable
+    </h3>
+
+    <p class="prose" style="margin-bottom: 20px;">
+      We evaluate <strong>TOPReward</strong> as a zero-shot progress estimator on large-scale real-world robot datasets.
+      Across both Open X-Embodiment (OXE) and ManiRewardBench, our likelihood-based formulation substantially
+      outperforms the state-of-the-art GVL baseline on open-source VLMs, demonstrating that progress information
+      is already encoded in pretrained video-language model logits.
+    </p>
+
+    <div class="results-table-container">
+      <table class="results-table">
+        <caption>
+          <strong>Results on the Open X-Embodiment dataset.</strong>
+      We report Mean VOC over 39 datasets and 20 episodes each. Higher is better.
+        </caption>
+        <thead>
+          <tr>
+            <th class="method-name">Method</th>
+            <th>Molmo-2-8B</th>
+            <th>Qwen3-VL-8B</th>
+            <th>Gemini-2.5-Pro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="method-name">GVL</td>
+            <td>-0.016</td>
+            <td>0.194</td>
+            <td><strong>0.541</strong></td>
+          </tr>
+          <tr class="highlight-row">
+            <td class="method-name">TOPReward</td>
+            <td><strong>0.417</strong></td>
+            <td><strong>0.857</strong></td>
+            <td>0.433</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="results-table-container">
+      <table class="results-table">
+        <caption>
+          <strong>Results on the ManiRewardBench.</strong>
+          We report Mean VOC over 113 tasks, 497 episodes. Higher is better.
+        </caption>
+
+        <thead>
+          <tr>
+            <th class="method-name"></th>
+            <th colspan="2">Molmo-2</th>
+            <th colspan="2">Qwen3-VL-8B</th>
+            <th colspan="2">Gemini<sup>*</sup></th>
+          </tr>
+          <tr>
+            <th class="method-name">Dataset</th>
+            <th>GVL</th>
+            <th>TOPReward</th>
+            <th>GVL</th>
+            <th>TOPReward</th>
+            <th>GVL</th>
+            <th>TOPReward</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="method-name">Lerobot</td>
+            <td>-0.001</td>
+            <td>0.595</td>
+            <td>0.332</td>
+            <td><strong>0.954</strong></td>
+            <td>0.620</td>
+            <td>0.578</td>
+          </tr>
+          <tr>
+            <td class="method-name">Franka</td>
+            <td>0.000</td>
+            <td>0.662</td>
+            <td>0.242</td>
+            <td><strong>0.942</strong></td>
+            <td>0.695</td>
+            <td>0.448</td>
+          </tr>
+          <tr>
+            <td class="method-name">Bimanual YAM</td>
+            <td>0.007</td>
+            <td>0.565</td>
+            <td>0.164</td>
+            <td><strong>0.947</strong></td>
+            <td>0.566</td>
+            <td>0.546</td>
+          </tr>
+          <tr>
+            <td class="method-name">Single-arm YAM</td>
+            <td>-0.017</td>
+            <td>0.642</td>
+            <td>0.544</td>
+            <td><strong>0.945</strong></td>
+            <td>0.752</td>
+            <td>0.488</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Qualitative -->
+    <figure class="full-figure" style="margin-top: 40px;">
+      <img src="./static/images/linear_progress_examples1x4_3.png" alt="Progress Trace Comparison">
+      <figcaption>
+        <strong>Progress traces on ManiRewardBench.</strong>
+         Example progress traces predicted by TOPReward (orange) compared to ground-truth completion (dashed) from ManiRewardBench. 
+         We also overlay Gemini-GVL (blue) on the same episodes when available.
+      </figcaption>
+    </figure>
+
+    <p class="prose" style="margin-top: 16px;">
+    The traces demonstrate that TOPReward produces smooth, monotonically increasing progress signals that closely 
+        track ground-truth task completion across diverse manipulation tasks. In contrast, Gemini-GVL (when available) 
+        exhibits noisier predictions with frequent non-monotonic fluctuations. Notably, TOPReward correctly captures the 
+        temporal structure of multi-step tasks, with progress plateaus corresponding to intermediate subtask completions 
+        and accelerations during active manipulation phases.
+    </p>
+
+    <!-- Success Detection -->
+    <h3 style="font-size: 1.25rem; font-weight: 600; margin: 50px 0 16px;">
+      Success Detection: Likelihood Beats Rank Correlation
+    </h3>
+
+    <p class="prose">
+      VOC (Value-Order Correlation), a rank correlation metric, measures ordering, not completion. As a result, failed trajectories that plateau early can still
+      achieve high VOC scores. TOPReward directly estimates the likelihood of instruction satisfaction,
+      naturally distinguishing success from failure.
+    </p>
+
+    <p class="prose" style="margin-top: 16px;">
+    We evaluate success detection on the failure trajectory split of ManiRewardBench, which contains both successful 
+    and failed attempts across 23 tasks. We frame success detection as binary classification and report ROC-AUC. 
+    For TOPReward, we use the average log-likelihood over the last 3 sampled frames; for GVL, we use the VOC score. 
+    </p>
+
+    <div class="results-table-container" style="margin-top: 20px;">
+      <table class="results-table">
+        <caption>
+          <strong>Success detection results.</strong>
+          We report ROC-AUC on ManiRewardBench. TOPReward matches or exceeds GVL across both open-source and proprietary models.
+        </caption>
+        <thead>
+          <tr>
+            <th class="method-name">Method</th>
+            <th>Qwen3-VL-8B</th>
+            <th>Gemini-2.5-Pro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="method-name">GVL</td>
+            <td>0.519</td>
+            <td>0.823</td>
+          </tr>
+          <tr class="highlight-row">
+            <td class="method-name">TOPReward (Ours)</td>
+            <td><strong>0.654</strong></td>
+            <td><strong>0.826</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>    
+  </div>
+</section>
+
+<!-- Real-World Deployment Results -->
+<section class="alt-bg">
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-flask"></i></span>
+      Real-World Deployment
+    </h2>
+
+    <p class="prose">
+      We deploy <strong>TOPReward</strong> on a real single-arm SO-100 robot to compute advantage weights for imitation learning.
+      Using only 50 noisy demonstrations per task, we apply advantage-weighted regression (AWR) combined with TOPReward (TOP-AWR).
+      Across all 6 tasks, advantage-weighted regression (AWR) consistently improves success rates over standard behavior cloning (BC).
+    </p>
+
+    <div class="results-table-container" style="margin-top: 20px;">
+      <table class="results-table">
+        <caption>
+          <strong>Real-world experiments.</strong>
+          We report success rates (%) for advantage-weighted behavior cloning on single-arm SO-100 tasks.
+          Each task is evaluated over 10 trials.
+        </caption>
+        <thead>
+          <tr>
+            <th class="method-name">Task</th>
+            <th>Pretrained</th>
+            <th>BC</th>
+            <th>TOP-AWR (Ours)</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="method-name">Place toy car in box</td>
+            <td>10</td>
+            <td>20</td>
+            <td><strong>30</strong></td>
+          </tr>
+          <tr>
+            <td class="method-name">Stack red cube on green cube</td>
+            <td>13</td>
+            <td>10</td>
+            <td><strong>23</strong></td>
+          </tr>
+          <tr>
+            <td class="method-name">Put pen into cup</td>
+            <td>17</td>
+            <td>57</td>
+            <td><strong>63</strong></td>
+          </tr>
+          <tr>
+            <td class="method-name">Place doll in box</td>
+            <td>0</td>
+            <td>70</td>
+            <td><strong>100</strong></td>
+          </tr>
+          <tr>
+            <td class="method-name">Pick up cube</td>
+            <td>40</td>
+            <td>70</td>
+            <td><strong>100</strong></td>
+          </tr>
+          <tr>
+            <td class="method-name">Put cube in cup</td>
+            <td>40</td>
+            <td>60</td>
+            <td><strong>90</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <figure class="full-figure" style="margin-top: 30px;">
+      <img src="./static/images/tasks.png" alt="Real-World Tasks">
+      <figcaption>
+        <strong>Real-World Tasks.</strong> Six real-world single-arm SO-100 manipulation tasks used 
+        for advantage-weighted behavior cloning evaluation.
+      </figcaption>
+    </figure>
+
+    <figure class="full-figure" style="margin-top: 30px;">
+      <img src="./static/images/rollout_frame_strip.png" alt="Real-World Rollouts">
+      <figcaption>
+        <strong>Qualitative comparison on ``Place doll in box.''</strong>
+        The pretrained policy and behavior cloning (BC) both fail, while TOP-AWR, 
+        fine-tuned with advantage weights from TOPReward, succeeds consistently. 
+        Frames are uniformly sampled from evaluation rollouts.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Key Findings -->
+<section>
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-lightbulb"></i></span>
+      Key Findings
+    </h2>
+
+    <ul class="findings-list">
+      <li>
+        <span><strong>Zero-shot progress estimation:</strong> TOPReward leverages token 
+          log-likelihoods from pretrained video VLMs as temporal value functions, avoiding 
+          the need for numeric calibration.</span>
+      </li>
+      <li>
+        <span><strong>Strong benchmark performance:</strong> On Open X-Embodiment
+          (39 datasets, 780 episodes) and ManiRewardBench (113 tasks, 497 episodes),
+          TOPReward achieves mean VOC scores of 0.857 and 0.947, outperforming GVL.</span>
+      </li>
+      <li>
+        <span><strong>Supports success detection and policy improvement:</strong> VOC-based 
+          progress signals enable success detection where baseline methods fail and can improve 
+          behavior cloning via advantage-weighting.</span>
+      </li>
+      <li>
+        <span><strong>Open-source model compatibility:</strong> Works effectively with 
+          Qwen3-VL-8B and other video VLMs, with improvements expected as video understanding 
+          advances.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- Conclusion -->
+<section class="alt-bg">
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-flag-checkered"></i></span>
+      Conclusion
+    </h2>
+
+    <div class="prose">
+      <p>
+        We introduced <strong>TOPReward</strong>, a zero-shot progress estimator for 
+        robotic manipulation that interprets pretrained video VLM token likelihoods as temporal 
+        value functions. By querying the model's belief about task completion rather 
+        than relying on numerical output, TOPReward avoids the known limitations of VLMs in 
+        instruction following and numeric reasoning.
+      </p>
+      <p>
+        Experiments show that TOPReward consistently outperforms prior approaches across 
+        diverse benchmarks and robot platforms, while enabling success detection and enhancing 
+        behavior cloning in real-world manipulation tasks.
+      </p>
+    </div>
+
+    <h3 style="font-size: 1.1rem; font-weight: 600; margin: 30px 0 16px;">Limitations and Future Work</h3>
+    <ul class="findings-list">
+      <li>
+        <span><strong>Visual perception limits:</strong> Tasks requiring fine-grained spatial 
+          reasoning may yield noisy progress signals if the VLM cannot distinguish intermediate 
+          states.</span>
+      </li>
+      <li>
+        <span><strong>Normalization constraints:</strong> Min-max normalization is performed per 
+          episode, limiting absolute progress comparisons across different trajectories without 
+          calibration.</span>
+      </li>
+      <li>
+        <span><strong>Model-dependent performance:</strong> Progress estimation quality is tied 
+          to the video understanding capabilities of the underlying VLM; future model improvements 
+          should directly improve TOPReward results.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- BibTeX -->
+<section>
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-quote-left"></i></span>
+      BibTeX
+    </h2>
+
+    <div class="bibtex-box">
+      <pre><code>@inproceedings{chen2026topreward,
+  title     = {TOPReward: Token Probabilities as Hidden Zero-Shot Rewards for Robotics},
+  author    = {Shirui Chen and Cole Harrison and Ying-Chun Lee and Angela Jin Yang and Jason Ren and Lillian J. Ratliff and Jiafei Duan and Dieter Fox and Ranjay Krishna},
+  url       = {https://ajyang5.github.io/TOPReward-webpage/},
+  year      = {2026},
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <p>
+      Template inspired by <a href="https://github.com/nerfies/nerfies.github.io" target="_blank">Nerfies</a>.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
