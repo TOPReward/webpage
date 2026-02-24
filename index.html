@@ -612,12 +612,12 @@
   <div class="container" style="text-align: center;">
     <img src="./static/images/Figure1.png" alt="TOPReward Overview" width="80%" style="height: auto;">
     <p class="teaser-caption">
-      <b>TOPReward</b> enables effective zero-shot estimation of task progress across diverse and challenging real-world manipulation tasks, 
-      without task-specific training. By bootstrapping on a range of vision-language model backbones, TOPReward provides a temporally 
-      consistent visual reward signal that supports downstream applications including success detection and policy improvement. Moreover, we introduce our in-house robotics reward benchmark, <b>ManiRewardBench</b>.
+      <b>TOPReward</b> enables effective zero-shot estimation of task progress across diverse and challenging real-world manipulation tasks. Moreover, we introduce our in-house robotics reward benchmark, <b>ManiRewardBench</b>.
     </p>
   </div>
 </section>
+
+
 
 
 <!-- Key Findings -->
@@ -630,22 +630,17 @@
 
     <ul class="findings-list">
       <li>
-        <span><strong>Zero-shot progress estimation:</strong> TOPReward leverages token 
-          log-likelihoods from pretrained video VLMs as temporal value functions, avoiding 
-          the need for numeric calibration.</span>
+        <span><strong>Zero-shot progress estimation:</strong> Use VLM token log-likelihoods as a dense temporal reward (no calibration).</span>
       </li>
       <li>
-        <span><strong>Strong benchmark performance:</strong> On Open X-Embodiment
-          (39 datasets, 780 episodes) and ManiRewardBench (113 tasks, 497 episodes),
-          TOPReward achieves mean VOC scores of 0.857 and 0.947, outperforming GVL.</span>
+        <span><strong>Strong benchmark performance:</strong> Achieves mean VOC scores of 0.857 on Open X-Embodiment 
+          and 0.947 on ManiRewardBench, outperforming GVL.</span>
       </li>
       <li>
-        <span><strong>Supports success detection and policy improvement:</strong> VOC-based 
-          progress signals enable success detection where baseline methods fail and can improve 
-          behavior cloning via advantage-weighting.</span>
+        <span><strong>Useful downstream:</strong> Enables success detection and improves BC via advantage weighting.</span>
       </li>
       <li>
-        <span><strong>Open-source model compatibility:</strong> Works effectively with 
+        <span><strong>Open-source model compatibility:</strong> Works with 
           Qwen3-VL-8B and other video VLMs, with improvements expected as video understanding 
           advances.</span>
       </li>
@@ -660,6 +655,33 @@
       <span class="icon"><i class="fas fa-align-left"></i></span>
       Abstract
     </h2>
+    <div class="prose">
+      <p>
+        <!-- While Vision-Language-Action (VLA) models have seen rapid progress in pretraining, 
+        their advancement in Reinforcement Learning (RL) remains hampered by 
+        low sample efficiency and sparse rewards in real-world settings. Developing generalizable
+         process reward models is essential for providing the fine-grained feedback necessary
+          to bridge this gap. However, existing temporal value functions often fail to generalize
+           beyond their training domains.  -->
+           Vision-Language-Action (VLA) models have advanced in pretraining, but their RL performance 
+           is limited by low sample efficiency and sparse real-world rewards. Generalizable process reward 
+           models are needed, yet existing temporal value functions often fail to transfer across domains.
+      </p>
+      <p>
+        We introduce <strong>TOPReward</strong>, a zero-shot progress estimator for robotic manipulation that reads
+        <strong>task progress directly from video Vision-Language Models (VLMs) token probabilities</strong>. 
+        Evaluated on Open X-Embodiment (39 datasets, 780 episodes) and our new <strong>ManiRewardBench</strong> (113 tasks, 497 episodes across Franka, YAM, and SO-100/101), 
+        TOPReward achieves 0.945 mean VOC on ManiRewardBench using Qwen3-VL and outperforms GVL on open-source VLMs. 
+        It also enables success detection and reward-aligned behavior cloning.
+<!--         
+        We evaluate TOPReward
+        on both the Open X-Embodiment dataset (39 datasets, 780 episodes) and our newly introduced
+        <strong>ManiRewardBench</strong> (113 tasks, 497 episodes across Franka, YAM, and SO-100/101 platforms). Across
+        130+ distinct real-world tasks, TOPReward achieves 0.945 mean VOC on ManiRewardBench using Qwen3-VL and outperforms Generative Value Learning (GVL) 
+        on open-source VLMs. TOPReward also supports <strong>success detection</strong> and <strong>reward-aligned behavior cloning</strong>. -->
+      </p>
+    </div>
+<!-- 
     <div class="prose">
       <p>
         While Vision-Language-Action (VLA) models have seen rapid progress in pretraining, 
@@ -682,7 +704,7 @@
         as a versatile tool for downstream applications, including dataset filtering, success detection, and reward-aligned
         behavior cloning.
       </p>
-    </div>
+    </div> -->
 
     <!-- Key Stats -->
     <div class="stats-grid">
@@ -730,8 +752,7 @@
         <div class="component-num">1</div>
         <h4>Prompted Video–Language Inference</h4>
         <p>
-          We use the VLM's internal output, i.e., predicted token probabilities as the reward. 
-          Concretely, we ask the model to judge whether the observed trajectory completes the instruction
+          We ask the VLM model to judge whether the observed trajectory completes the instruction
            and score the log-likelihood of an affirmative answer (e.g. the token <i>True</i>). 
         </p>
       </div>
@@ -739,10 +760,13 @@
       <div class="component-card">
         <div class="component-num">2</div>
         <h4>Token-Probability Reward Extraction</h4>
-        <p>
+        <!-- <p>
           Compute the log-likelihood of the answer token "True".
           This procedure entirely sidesteps the need for the language model to rely 
           on its instruction-following or numerical generation capabilities.
+        </p> -->
+        <p>
+          Compute the log-likelihood of the answer token "True", avoiding reliance on the model’s instruction-following or numeric generation abilities.
         </p>
       </div>
 
@@ -770,12 +794,12 @@
       Large-Scale Progress Estimation: Logit-Based Rewards Are More Reliable
     </h3>
 
-    <p class="prose" style="margin-bottom: 20px;">
+    <!-- <p class="prose" style="margin-bottom: 20px;">
       We evaluate <strong>TOPReward</strong> as a zero-shot progress estimator on large-scale real-world robot datasets.
       Across both Open X-Embodiment (OXE) and ManiRewardBench, our likelihood-based formulation substantially
       outperforms the state-of-the-art GVL baseline on open-source VLMs, demonstrating that progress information
       is already encoded in pretrained video-language model logits.
-    </p>
+    </p> -->
 
     <div class="results-table-container">
       <table class="results-table">
@@ -885,11 +909,14 @@
     </figure>
 
     <p class="prose" style="margin-top: 16px;">
-    The traces demonstrate that TOPReward produces smooth, monotonically increasing progress signals that closely 
+    <!-- The traces demonstrate that TOPReward produces smooth, monotonically increasing progress signals that closely 
         track ground-truth task completion across diverse manipulation tasks. In contrast, Gemini-GVL (when available) 
         exhibits noisier predictions with frequent non-monotonic fluctuations. Notably, TOPReward correctly captures the 
         temporal structure of multi-step tasks, with progress plateaus corresponding to intermediate subtask completions 
-        and accelerations during active manipulation phases.
+        and accelerations during active manipulation phases. -->
+        TOPReward generates smooth, steadily increasing progress signals that closely match ground-truth completion across tasks. 
+        In contrast, Gemini-GVL produces noisier, non-monotonic predictions. TOPReward also captures multi-step structure, 
+        with plateaus at subtask completion and sharper gains during active manipulation.
     </p>
 
     <!-- Success Detection -->
@@ -898,22 +925,32 @@
     </h3>
 
     <p class="prose">
+      VOC (Value-Order Correlation) measures rank consistency, not task completion, so failed trajectories that plateau early can still score high. 
+      In contrast, TOPReward estimates instruction-satisfaction likelihood, better separating success from failure.
+    </p>
+
+    <p class="prose" style="margin-top: 16px;">
+      We evaluate success detection on the ManiRewardBench failure split (23 tasks) as a binary classification problem, reporting ROC-AUC. TOPReward uses the 
+      average log-likelihood of the last three sampled frames, while GVL uses VOC scores.
+    </p>
+
+    <!-- <p class="prose">
       VOC (Value-Order Correlation), a rank correlation metric, measures ordering, not completion. As a result, failed trajectories that plateau early can still
       achieve high VOC scores. TOPReward directly estimates the likelihood of instruction satisfaction,
       naturally distinguishing success from failure.
-    </p>
-
+    </p> -->
+<!-- 
     <p class="prose" style="margin-top: 16px;">
     We evaluate success detection on the failure trajectory split of ManiRewardBench, which contains both successful 
     and failed attempts across 23 tasks. We frame success detection as binary classification and report ROC-AUC. 
     For TOPReward, we use the average log-likelihood over the last 3 sampled frames; for GVL, we use the VOC score. 
-    </p>
+    </p> -->
 
     <div class="results-table-container" style="margin-top: 20px;">
       <table class="results-table">
         <caption>
           <strong>Success detection results.</strong>
-          We report ROC-AUC on ManiRewardBench. TOPReward matches or exceeds GVL across both open-source and proprietary models.
+          <!-- We report ROC-AUC on ManiRewardBench. TOPReward matches or exceeds GVL across both open-source and proprietary models. -->
         </caption>
         <thead>
           <tr>
@@ -1108,6 +1145,7 @@
   </div>
 </section>
 
+
 <!-- Conclusion -->
 <section class="alt-bg">
   <div class="container">
@@ -1139,14 +1177,12 @@
           states.</span>
       </li>
       <li>
-        <span><strong>Normalization constraints:</strong> Min-max normalization is performed per 
-          episode, limiting absolute progress comparisons across different trajectories without 
-          calibration.</span>
+        <span><strong>Normalization constraints:</strong> Per-episode min-max normalization limits absolute 
+          progress comparison across trajectories without calibration.</span>
       </li>
       <li>
-        <span><strong>Model-dependent performance:</strong> Progress estimation quality is tied 
-          to the video understanding capabilities of the underlying VLM; future model improvements 
-          should directly improve TOPReward results.</span>
+        <span><strong>Model-dependent performance:</strong> Performance relies on the underlying VLM's video understanding; 
+          stronger models should directly improve TOPReward.</span>
       </li>
     </ul>
   </div>
