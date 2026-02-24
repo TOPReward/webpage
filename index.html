@@ -7,6 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TOPReward: Token Probabilities as Hidden Zero-Shot Rewards for Robotics</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./static/images/favicon.ico" sizes="any">
+ 
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
@@ -615,6 +619,40 @@
   </div>
 </section>
 
+
+<!-- Key Findings -->
+<section>
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-lightbulb"></i></span>
+      Highlights
+    </h2>
+
+    <ul class="findings-list">
+      <li>
+        <span><strong>Zero-shot progress estimation:</strong> TOPReward leverages token 
+          log-likelihoods from pretrained video VLMs as temporal value functions, avoiding 
+          the need for numeric calibration.</span>
+      </li>
+      <li>
+        <span><strong>Strong benchmark performance:</strong> On Open X-Embodiment
+          (39 datasets, 780 episodes) and ManiRewardBench (113 tasks, 497 episodes),
+          TOPReward achieves mean VOC scores of 0.857 and 0.947, outperforming GVL.</span>
+      </li>
+      <li>
+        <span><strong>Supports success detection and policy improvement:</strong> VOC-based 
+          progress signals enable success detection where baseline methods fail and can improve 
+          behavior cloning via advantage-weighting.</span>
+      </li>
+      <li>
+        <span><strong>Open-source model compatibility:</strong> Works effectively with 
+          Qwen3-VL-8B and other video VLMs, with improvements expected as video understanding 
+          advances.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
 <!-- Abstract -->
 <section>
   <div class="container">
@@ -1067,39 +1105,6 @@
         <div class="video-label">TOP-AWR (Ours) - Pick up cube <span class="check">&#10003;</span></div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- Key Findings -->
-<section>
-  <div class="container">
-    <h2 class="section-title">
-      <span class="icon"><i class="fas fa-lightbulb"></i></span>
-      Key Findings
-    </h2>
-
-    <ul class="findings-list">
-      <li>
-        <span><strong>Zero-shot progress estimation:</strong> TOPReward leverages token 
-          log-likelihoods from pretrained video VLMs as temporal value functions, avoiding 
-          the need for numeric calibration.</span>
-      </li>
-      <li>
-        <span><strong>Strong benchmark performance:</strong> On Open X-Embodiment
-          (39 datasets, 780 episodes) and ManiRewardBench (113 tasks, 497 episodes),
-          TOPReward achieves mean VOC scores of 0.857 and 0.947, outperforming GVL.</span>
-      </li>
-      <li>
-        <span><strong>Supports success detection and policy improvement:</strong> VOC-based 
-          progress signals enable success detection where baseline methods fail and can improve 
-          behavior cloning via advantage-weighting.</span>
-      </li>
-      <li>
-        <span><strong>Open-source model compatibility:</strong> Works effectively with 
-          Qwen3-VL-8B and other video VLMs, with improvements expected as video understanding 
-          advances.</span>
-      </li>
-    </ul>
   </div>
 </section>
 
