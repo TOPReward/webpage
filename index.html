@@ -540,6 +540,124 @@
     .check { color: green; font-weight: bold; }
     .cross { color: red; font-weight: bold; }
 
+    .demo-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .demo-video-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-light);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .demo-task-label { font-size: 0.9rem; color: var(--text-secondary); }
+    .demo-task-label strong { color: var(--text-primary); }
+    .demo-t-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      background: var(--primary);
+      color: white;
+      padding: 3px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .demo-video-wrap {
+      position: relative;
+      width: 50%;
+      margin: 0 auto;
+      background: #000;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+    }
+    .demo-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .demo-vid-cursor {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: rgba(37,99,235,0.9);
+      box-shadow: 0 0 10px rgba(37,99,235,0.5);
+      pointer-events: none;
+      left: 0;
+      transition: left 0.04s linear;
+    }
+    .demo-scrubber-wrap { padding: 14px 20px 8px; }
+    .demo-scrubber-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 6px;
+    }
+    .demo-scrubber {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 5px; border-radius: 3px;
+      background: var(--border); outline: none; cursor: pointer;
+    }
+    .demo-scrubber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+      cursor: grab; transition: transform 0.1s;
+    }
+    .demo-scrubber:active::-webkit-slider-thumb { transform: scale(1.2); cursor: grabbing; }
+    .demo-scrubber::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--primary); border: none; cursor: grab; }
+    .demo-controls {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 12px 20px 18px; flex-wrap: wrap;
+    }
+    .demo-btn {
+      padding: 7px 18px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg-light);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .demo-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .demo-btn-play { background: var(--primary); color: white; border-color: var(--primary); min-width: 90px; }
+    .demo-btn-play:hover { background: var(--primary-dark); color: white; }
+    .demo-speed-select {
+      padding: 7px 10px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg-light);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+      cursor: pointer; outline: none;
+    }
+    .demo-chart-card {
+      background: white; border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    }
+    .demo-chart-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      background: var(--bg-light); flex-wrap: wrap; gap: 10px;
+    }
+    .demo-legend { display: flex; gap: 16px; flex-wrap: wrap; }
+    .demo-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-secondary); }
+    .demo-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .demo-legend-dash { width: 18px; height: 0; border-top: 2px dashed #9ca3af; flex-shrink: 0; }
+    .demo-chart-body { padding: 16px 20px 8px; }
+    .demo-chart-body canvas { width: 100% !important; display: block; }
+    .demo-readouts {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px; padding: 12px 20px 20px;
+    }
+    .demo-readout {
+      background: var(--bg-light); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 14px;
+    }
+    .demo-readout-label { font-size: 0.72rem; color: var(--text-secondary); letter-spacing: 0.06em; margin-bottom: 4px; font-weight: 500; }
+    .demo-readout-val { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 600; line-height: 1; margin-bottom: 6px; }
+    .demo-readout-bar-bg { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .demo-readout-bar-fill { height: 100%; border-radius: 2px; transition: width 0.1s ease; }
+
     /* Responsive */
     @media (max-width: 768px) {
       .hero h1 {
@@ -580,7 +698,7 @@
         <a href="#" style="color: inherit; text-decoration: none;">Cole Harrison</a><sup>3</sup>,
         <a href="#" style="color: inherit; text-decoration: none;">Ying-Chun Lee</a><sup>1</sup>,
         <a href="#" style="color: inherit; text-decoration: none;">Angela Jin Yang</a><sup>1</sup>,
-        <a href="#" style="color: inherit; text-decoration: none;">Jason Ren</a><sup>1,2,4</sup>,<br>
+        <a href="#" style="color: inherit; text-decoration: none;">Zhongzheng Ren</a><sup>1,2,4</sup>,<br>
         <a href="#" style="color: inherit; text-decoration: none;">Lillian J. Ratliff</a><sup>1</sup>,
         <a href="https://duanjiafei.com/" style="color: inherit; text-decoration: none;">Jiafei Duan</a><sup>1,2</sup><sup>*</sup>,
         <a href="https://homes.cs.washington.edu/~fox/" style="color: inherit; text-decoration: none;">Dieter Fox</a><sup>1,2</sup><sup>*</sup>,
@@ -596,7 +714,7 @@
         <sup>*</sup>Co-advised
       </p>
       <div class="btn-group">
-        <a href="#" class="btn btn-outline" target="_blank">
+        <a href="https://arxiv.org/pdf/2602.19313" class="btn btn-outline" target="_blank">
           <i class="ai ai-arxiv"></i> arXiv
         </a>
         <a href="https://github.com/TOPReward/TOPReward" class="btn btn-outline" target="_blank">
@@ -976,6 +1094,85 @@
   </div>
 </section>
 
+<section class="alt-bg">
+  <div class="container">
+    <h2 class="section-title">
+      <span class="icon"><i class="fas fa-sliders-h"></i></span>
+      Live Demo
+    </h2>
+
+    <!-- Video + scrubber -->
+    <div class="demo-card">
+      <div class="demo-video-header">
+        <span class="demo-task-label">Task: <strong>"Put the cube into the bowl."</strong> &nbsp;·&nbsp; Platform: <strong>SO-100/101</strong>&nbsp;</span>
+        <span class="demo-t-badge" id="demoTBadge">t&nbsp;=&nbsp;0.000</span>
+      </div>
+
+      <div class="demo-video-wrap">
+        <video id="demoVideo" preload="auto" muted playsinline>
+          <source src="./static/videos/demo.mp4" type="video/mp4">
+        </video>
+        <div class="demo-vid-cursor" id="demoVidCursor"></div>
+      </div>
+
+      <div class="demo-scrubber-wrap">
+        <div class="demo-scrubber-labels">
+          <span>t = 0</span>
+          <span>t = 1</span>
+        </div>
+        <input type="range" id="demoScrubber" class="demo-scrubber" min="0" max="1000" value="0">
+      </div>
+
+      <div class="demo-controls">
+        <button class="demo-btn" id="demoStepBack">&#9664; Step</button>
+        <button class="demo-btn demo-btn-play" id="demoPlayBtn">&#9654;&nbsp;Play</button>
+        <button class="demo-btn" id="demoStepFwd">Step &#9654;</button>
+        <select id="demoSpeed" class="demo-speed-select">
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="demo-chart-card">
+      <div class="demo-chart-header">
+        <span style="font-weight:600;font-size:0.95rem;">Predicted Progress over Time</span>
+        <div class="demo-legend">
+          <span class="demo-legend-item"><span class="demo-legend-dot" style="background:#f97316"></span>TOPReward (Qwen3-VL-8B)</span>
+          <span class="demo-legend-item"><span class="demo-legend-dot" style="background:#2563eb"></span>GVL (Gemini-2.5-Pro)</span>
+          <span class="demo-legend-item"><span class="demo-legend-dash"></span>Ground Truth</span>
+        </div>
+      </div>
+
+      <div class="demo-chart-body">
+        <canvas id="demoChart"></canvas>
+      </div>
+
+      <div class="demo-readouts">
+        <div class="demo-readout">
+          <div class="demo-readout-label">TOPReward</div>
+          <div class="demo-readout-val" id="demoValTop" style="color:#f97316">0.000</div>
+          <div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="demoBarTop" style="background:#f97316;width:0%"></div></div>
+        </div>
+        <div class="demo-readout">
+          <div class="demo-readout-label">GVL (Gemini-2.5-Pro)</div>
+          <div class="demo-readout-val" id="demoValGvl" style="color:#2563eb">0.000</div>
+          <div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="demoBarGvl" style="background:#2563eb;width:0%"></div></div>
+        </div>
+        <div class="demo-readout">
+          <div class="demo-readout-label">Ground Truth</div>
+          <div class="demo-readout-val" id="demoValGt" style="color:#9ca3af">0.000</div>
+          <div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="demoBarGt" style="background:#9ca3af;width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- Real-World Deployment Results -->
 <section class="alt-bg">
   <div class="container">
@@ -1199,7 +1396,7 @@
     <div class="bibtex-box">
       <pre><code>@misc{chen2026topreward,
   title        = {TOPReward: Token Probabilities as Hidden Zero-Shot Rewards for Robotics},
-  author       = {Shirui Chen and Cole Harrison and Ying-Chun Lee and Angela Jin Yang and Jason Ren and Lillian J. Ratliff and Jiafei Duan and Dieter Fox and Ranjay Krishna},
+  author       = {Shirui Chen and Cole Harrison and Ying-Chun Lee and Angela Jin Yang and Zhongzheng Ren and Lillian J. Ratliff and Jiafei Duan and Dieter Fox and Ranjay Krishna},
   year         = {2026},
   howpublished = {\url{https://topreward.github.io/webpage/}},
   note         = {Project page}
@@ -1216,6 +1413,176 @@
     </p>
   </div>
 </footer>
+
+
+<script>
+(function () {
+  const TOP = [
+    [0,0],[0.071428571,0.284264355],[0.142857143,0.463799737],
+    [0.214285714,0.613412555],[0.285714286,0.653309307],[0.357142857,0.827857595],
+    [0.428571429,0.963600058],[0.5,0.984639361],[0.571428571,0.996639556],
+    [0.642857143,0.997379828],[0.714285714,0.998198023],[0.785714286,0.999737009],
+    [0.857142857,0.99952272],[0.928571429,0.999581162],[1,1]
+  ];
+  const GVL = [
+    [0,0],[0.052631579,0.75],[0.105263158,0.5],[0.157894737,0.1],
+    [0.210526316,0.4],[0.263157895,0.3],[0.315789474,0],[0.368421053,0.2],
+    [0.421052632,0.9],[0.473684211,0.15],[0.526315789,1],[0.578947368,1],
+    [0.631578947,1],[0.684210526,1],[0.736842105,1],[0.789473684,1],
+    [0.842105263,1],[0.894736842,1],[0.947368421,1],[1,1]
+  ];
+  const GT = [
+    [0,0],[0.071428571,0.2],[0.142857143,0.33],[0.214285714,0.52],
+    [0.285714286,0.76],[0.357142857,0.9],[0.428571429,1],[0.5,1],
+    [0.571428571,1],[0.642857143,1],[0.714285714,1],[0.785714286,1],
+    [0.857142857,1],[0.928571429,1],[1,1]
+  ];
+
+  function lerp(data, t) {
+    if (t <= data[0][0]) return data[0][1];
+    if (t >= data[data.length - 1][0]) return data[data.length - 1][1];
+    for (let i = 0; i < data.length - 1; i++) {
+      if (t >= data[i][0] && t <= data[i + 1][0]) {
+        const f = (t - data[i][0]) / (data[i + 1][0] - data[i][0]);
+        return data[i][1] + f * (data[i + 1][1] - data[i][1]);
+      }
+    }
+    return 0;
+  }
+
+  const canvas = document.getElementById('demoChart');
+  const ctx    = canvas.getContext('2d');
+  const PL = 48, PR = 16, PT = 14, PB = 36;
+  let CW, CH = 210;
+
+  function resizeCanvas() {
+    CW = canvas.parentElement.clientWidth - 40;
+    canvas.width = CW; canvas.height = CH;
+    drawChart(curT);
+  }
+
+  function toPx(t, v) {
+    return [PL + t * (CW - PL - PR), PT + (1 - v) * (CH - PT - PB)];
+  }
+
+  function drawGrid() {
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    ctx.fillStyle = '#94a3b8'; ctx.textAlign = 'right';
+    ctx.font = '10px JetBrains Mono, monospace';
+    for (let v = 0; v <= 1; v += 0.25) {
+      const [, y] = toPx(0, v);
+      ctx.beginPath(); ctx.moveTo(PL, y); ctx.lineTo(CW - PR, y); ctx.stroke();
+      ctx.fillText(v.toFixed(2), PL - 4, y + 4);
+    }
+    ctx.textAlign = 'center';
+    for (let t = 0; t <= 1; t += 0.25) {
+      const [x] = toPx(t, 0);
+      ctx.beginPath(); ctx.moveTo(x, PT); ctx.lineTo(x, CH - PB); ctx.stroke();
+      ctx.fillText(t.toFixed(2), x, CH - 6);
+    }
+    ctx.setLineDash([]); ctx.textAlign = 'left';
+  }
+
+  function drawLine(data, color, dashed, width) {
+    ctx.beginPath();
+    ctx.strokeStyle = color; ctx.lineWidth = width || 2;
+    ctx.setLineDash(dashed ? [6, 4] : []);
+    data.forEach(([t, v], i) => {
+      const [x, y] = toPx(t, v);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  function drawChart(t) {
+    if (!CW) return;
+    ctx.clearRect(0, 0, CW, CH);
+    drawGrid();
+    drawLine(GT,  '#9ca3af', true,  1.8);
+    drawLine(GVL, '#2563eb', false, 2);
+    drawLine(TOP, '#f97316', false, 2.5);
+
+    /* vertical cursor */
+    const [cx] = toPx(t, 0);
+    ctx.beginPath(); ctx.strokeStyle = 'rgba(30,41,59,0.3)'; ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]); ctx.moveTo(cx, PT); ctx.lineTo(cx, CH - PB); ctx.stroke();
+    ctx.setLineDash([]);
+
+    /* dots */
+    [[TOP, '#f97316'], [GVL, '#2563eb'], [GT, '#9ca3af']].forEach(([d, c]) => {
+      const v = lerp(d, t);
+      const [dx, dy] = toPx(t, v);
+      ctx.beginPath(); ctx.arc(dx, dy, 5, 0, Math.PI * 2);
+      ctx.fillStyle = c; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    });
+  }
+
+  let curT = 0, playing = false, rafId, lastTs;
+  const video      = document.getElementById('demoVideo');
+  const scrubber   = document.getElementById('demoScrubber');
+  const tBadge     = document.getElementById('demoTBadge');
+  const vidCursor  = document.getElementById('demoVidCursor');
+  const playBtn    = document.getElementById('demoPlayBtn');
+
+  function setT(t) {
+    curT = Math.max(0, Math.min(1, t));
+    scrubber.value = curT * 1000;
+    tBadge.textContent = 't\u00a0=\u00a0' + curT.toFixed(3);
+    vidCursor.style.left = (curT * 100) + '%';
+
+    if (video.duration && isFinite(video.duration))
+      video.currentTime = curT * video.duration;
+
+    const tv = lerp(TOP, curT), gv = lerp(GVL, curT), gtv = lerp(GT, curT);
+    document.getElementById('demoValTop').textContent = tv.toFixed(3);
+    document.getElementById('demoValGvl').textContent = gv.toFixed(3);
+    document.getElementById('demoValGt').textContent  = gtv.toFixed(3);
+    document.getElementById('demoBarTop').style.width = (tv  * 100) + '%';
+    document.getElementById('demoBarGvl').style.width = (gv  * 100) + '%';
+    document.getElementById('demoBarGt').style.width  = (gtv * 100) + '%';
+    drawChart(curT);
+  }
+
+  scrubber.addEventListener('input', () => { stopPlay(); setT(scrubber.value / 1000); });
+
+  function stopPlay() {
+    playing = false;
+    playBtn.innerHTML = '&#9654;&nbsp;Play';
+    cancelAnimationFrame(rafId);
+  }
+
+  function startPlay() {
+    playing = true;
+    playBtn.innerHTML = '&#9646;&#9646;&nbsp;Pause';
+    lastTs = null;
+    rafId = requestAnimationFrame(animStep);
+  }
+
+  function animStep(ts) {
+    if (!lastTs) lastTs = ts;
+    const speed = parseFloat(document.getElementById('demoSpeed').value);
+    const dt = (ts - lastTs) / 1000 * speed;
+    lastTs = ts;
+    const next = curT + dt * 0.2;   /* full range in ~5 s at 1× */
+    if (next >= 1) { setT(1); stopPlay(); return; }
+    setT(next);
+    rafId = requestAnimationFrame(animStep);
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (playing) stopPlay();
+    else { if (curT >= 1) setT(0); startPlay(); }
+  });
+  document.getElementById('demoStepBack').addEventListener('click', () => { stopPlay(); setT(curT - 1/14); });
+  document.getElementById('demoStepFwd').addEventListener('click',  () => { stopPlay(); setT(curT + 1/14); });
+
+  window.addEventListener('resize', resizeCanvas);
+  video.addEventListener('loadedmetadata', () => setT(0));
+  setT(0);
+  setTimeout(resizeCanvas, 60);
+})();
+</script>
 
 </body>
 </html>
