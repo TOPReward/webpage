@@ -564,7 +564,7 @@
       font-size: 0.8rem;
       background: var(--primary);
       color: white;
-      padding: 3px 12px;
+      padding: 3px 8px;
       border-radius: 20px;
       white-space: nowrap;
     }
@@ -578,14 +578,7 @@
     }
     .demo-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
     .demo-vid-cursor {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 2px;
-      background: rgba(37,99,235,0.9);
-      box-shadow: 0 0 10px rgba(37,99,235,0.5);
-      pointer-events: none;
-      left: 0;
-      transition: left 0.04s linear;
+      display: none;
     }
     .demo-scrubber-wrap { padding: 14px 20px 8px; }
     .demo-scrubber-labels {
@@ -622,8 +615,7 @@
       color: var(--text-secondary);
       font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
       cursor: pointer; outline: none;
-      position: absolute;
-      right: 20px;
+      /* margin-left: auto; */
     }
     .demo-btn {
       padding: 7px 18px; border-radius: 8px;
@@ -1118,8 +1110,8 @@
     </h2>
 
     <div class="demo-pair-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
-      <!-- ── Demo 3 ─────────────────────────────────────────────── -->
-      <div class="demo-pair" data-id="3">
+      <div style="display:contents">
+        <!-- Demo 3 -->
         <div class="demo-card" style="margin-bottom:0;">
           <div class="demo-video-header">
             <span class="demo-task-label">Task: <strong>"Fold the towel."</strong><br><span style="font-size:0.8rem;">Platform: <strong>Bimanual YAM</strong></span></span>
@@ -1134,32 +1126,13 @@
             <input type="range" id="scrubber3" class="demo-scrubber" min="0" max="1000" value="0">
           </div>
           <div class="demo-controls">
-            <button class="demo-btn" id="back3">&#9664; Step</button>
+            <button class="demo-btn" id="back3">&#9664;&#9664;</button>
             <button class="demo-btn demo-btn-play" id="play3">&#9654;&nbsp;Play</button>
-            <button class="demo-btn" id="fwd3">Step &#9654;</button>
+            <button class="demo-btn" id="fwd3">&#9654;&#9654;</button>
             <select id="speed3" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
           </div>
         </div>
-        <div class="demo-chart-card" style="margin-top:12px;">
-          <div class="demo-chart-header">
-            <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
-            <div class="demo-legend">
-              <span class="demo-legend-item"><span class="demo-legend-dot" style="background:#f97316"></span>TOPReward</span>
-              <span class="demo-legend-item"><span class="demo-legend-dot" style="background:#2563eb"></span>GVL</span>
-              <span class="demo-legend-item"><span class="demo-legend-dash" style="border-top-color:#9ca3af"></span>Ground Truth</span>
-            </div>
-          </div>
-          <div class="demo-chart-body"><canvas id="chart3"></canvas></div>
-          <div class="demo-readouts">
-            <div class="demo-readout"><div class="demo-readout-label">TOPReward</div><div class="demo-readout-val" id="valTop3" style="color:#f97316">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barTop3" style="background:#f97316;width:0%"></div></div></div>
-            <div class="demo-readout"><div class="demo-readout-label">GVL</div><div class="demo-readout-val" id="valGvl3" style="color:#2563eb">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barGvl3" style="background:#2563eb;width:0%"></div></div></div>
-            <div class="demo-readout"><div class="demo-readout-label">GT</div><div class="demo-readout-val" id="valGt3" style="color:#9ca3af">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barGt3" style="background:#9ca3af;width:0%"></div></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── Demo 4 ─────────────────────────────────────────────── -->
-      <div class="demo-pair" data-id="4">
+        <!-- Demo 4 -->
         <div class="demo-card" style="margin-bottom:0;">
           <div class="demo-video-header">
             <span class="demo-task-label">Task: <strong>"Remove the cap."</strong><br><span style="font-size:0.8rem;">Platform: <strong>Bimanual YAM</strong></span></span>
@@ -1174,12 +1147,30 @@
             <input type="range" id="scrubber4" class="demo-scrubber" min="0" max="1000" value="0">
           </div>
           <div class="demo-controls">
-            <button class="demo-btn" id="back4">&#9664; Step</button>
+            <button class="demo-btn" id="back4">&#9664;&#9664;</button>
             <button class="demo-btn demo-btn-play" id="play4">&#9654;&nbsp;Play</button>
-            <button class="demo-btn" id="fwd4">Step &#9654;</button>
+            <button class="demo-btn" id="fwd4">&#9654;&#9654;</button>
             <select id="speed4" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
           </div>
         </div>
+        <!-- Demo 3 -->
+        <div class="demo-chart-card" style="margin-top:12px;">
+          <div class="demo-chart-header">
+            <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
+            <div class="demo-legend">
+              <span class="demo-legend-item"><span class="demo-legend-dot" style="background:#f97316"></span>TOPReward</span>
+              <span class="demo-legend-item"><span class="demo-legend-dot" style="background:#2563eb"></span>GVL</span>
+              <span class="demo-legend-item"><span class="demo-legend-dash" style="border-top-color:#9ca3af"></span>Ground Truth</span>
+            </div>
+          </div>
+          <div class="demo-chart-body"><canvas id="chart3"></canvas></div>
+          <div class="demo-readouts">
+            <div class="demo-readout"><div class="demo-readout-label">TOPReward</div><div class="demo-readout-val" id="valTop3" style="color:#f97316">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barTop3" style="background:#f97316;width:0%"></div></div></div>
+            <div class="demo-readout"><div class="demo-readout-label">GVL</div><div class="demo-readout-val" id="valGvl3" style="color:#2563eb">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barGvl3" style="background:#2563eb;width:0%"></div></div></div>
+            <div class="demo-readout"><div class="demo-readout-label">GT</div><div class="demo-readout-val" id="valGt3" style="color:#9ca3af">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barGt3" style="background:#9ca3af;width:0%"></div></div></div>
+          </div>  
+        </div>
+        <!-- Demo 4 -->
         <div class="demo-chart-card" style="margin-top:12px;">
           <div class="demo-chart-header">
             <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
@@ -1196,10 +1187,11 @@
             <div class="demo-readout"><div class="demo-readout-label">GT</div><div class="demo-readout-val" id="valGt4" style="color:#9ca3af">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barGt4" style="background:#9ca3af;width:0%"></div></div></div>
           </div>
         </div>
+
       </div>
 
-      <!-- ── Demo 5 ─────────────────────────────────────────────── -->
-      <div class="demo-pair" data-id="5">
+      <div style="display:contents">
+        <!-- Demo 5 -->
         <div class="demo-card" style="margin-bottom:0;">
           <div class="demo-video-header">
             <span class="demo-task-label">Task: <strong>"Put the block into the cup."</strong><br><span style="font-size:0.8rem;">Platform: <strong>Franka</strong></span></span>
@@ -1214,12 +1206,35 @@
             <input type="range" id="scrubber5" class="demo-scrubber" min="0" max="1000" value="0">
           </div>
           <div class="demo-controls">
-            <button class="demo-btn" id="back5">&#9664; Step</button>
+            <button class="demo-btn" id="back5">&#9664;&#9664;</button>
             <button class="demo-btn demo-btn-play" id="play5">&#9654;&nbsp;Play</button>
-            <button class="demo-btn" id="fwd5">Step &#9654;</button>
+            <button class="demo-btn" id="fwd5">&#9654;&#9654;</button>
             <select id="speed5" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
           </div>
         </div>
+        <!-- Demo 6 -->
+        <div class="demo-card" style="margin-bottom:0;">
+          <div class="demo-video-header">
+            <span class="demo-task-label">Task: <strong>"Put the marker into the cup."</strong><br><span style="font-size:0.8rem;">Platform: <strong>Franka</strong></span></span>
+            <span class="demo-t-badge" id="tBadge6">t = 0.000</span>
+          </div>
+          <div class="demo-video-wrap">
+            <video id="vid6" preload="auto" muted playsinline><source src="./static/videos/franka_demo2.mp4" type="video/mp4"></video>
+            <div class="demo-vid-cursor" id="cursor6"></div>
+          </div>
+          <div class="demo-scrubber-wrap">
+            <div class="demo-scrubber-labels"><span>t = 0</span><span style="font-size:0.75rem;color:var(--text-secondary)">← drag →</span><span>t = 1</span></div>
+            <input type="range" id="scrubber6" class="demo-scrubber" min="0" max="1000" value="0">
+          </div>
+          <div class="demo-controls">
+            <button class="demo-btn" id="back6">&#9664;&#9664;</button>
+            <button class="demo-btn demo-btn-play" id="play6">&#9654;&nbsp;Play</button>
+            <button class="demo-btn" id="fwd6">&#9654;&#9654;</button>
+            <select id="speed6" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
+          </div>
+        </div>
+
+        <!-- Demo 5 -->
         <div class="demo-chart-card" style="margin-top:12px;">
           <div class="demo-chart-header">
             <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
@@ -1236,30 +1251,7 @@
             <div class="demo-readout"><div class="demo-readout-label">GT</div><div class="demo-readout-val" id="valGt5" style="color:#9ca3af">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barGt5" style="background:#9ca3af;width:0%"></div></div></div>
           </div>
         </div>
-      </div>
-
-      <!-- ── Demo 6 ─────────────────────────────────────────────── -->
-      <div class="demo-pair" data-id="6">
-        <div class="demo-card" style="margin-bottom:0;">
-          <div class="demo-video-header">
-            <span class="demo-task-label">Task: <strong>"Put the marker into the cup."</strong><br><span style="font-size:0.8rem;">Platform: <strong>Franka</strong></span></span>
-            <span class="demo-t-badge" id="tBadge6">t = 0.000</span>
-          </div>
-          <div class="demo-video-wrap">
-            <video id="vid6" preload="auto" muted playsinline><source src="./static/videos/franka_demo2.mp4" type="video/mp4"></video>
-            <div class="demo-vid-cursor" id="cursor6"></div>
-          </div>
-          <div class="demo-scrubber-wrap">
-            <div class="demo-scrubber-labels"><span>t = 0</span><span style="font-size:0.75rem;color:var(--text-secondary)">← drag →</span><span>t = 1</span></div>
-            <input type="range" id="scrubber6" class="demo-scrubber" min="0" max="1000" value="0">
-          </div>
-          <div class="demo-controls">
-            <button class="demo-btn" id="back6">&#9664; Step</button>
-            <button class="demo-btn demo-btn-play" id="play6">&#9654;&nbsp;Play</button>
-            <button class="demo-btn" id="fwd6">Step &#9654;</button>
-            <select id="speed6" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
-          </div>
-        </div>
+        <!-- Demo 6 -->
         <div class="demo-chart-card" style="margin-top:12px;">
           <div class="demo-chart-header">
             <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
@@ -1278,9 +1270,9 @@
         </div>
       </div>
 
-      <!-- ── Demo 1 ─────────────────────────────────────────────── -->
-      <div class="demo-pair" data-id="1">
-        <div class="demo-card" style="margin-bottom:0;">
+      <div style="display:contents">
+        <!-- Demo 1 -->
+         <div class="demo-card" style="margin-bottom:0;">
           <div class="demo-video-header">
             <span class="demo-task-label">Task: <strong>"Remove the block and stack the green cube on the red cube."</strong><br><span style="font-size:0.8rem;">Platform: <strong>SO-100/101</strong></span></span>
             <span class="demo-t-badge" id="tBadge1">t = 0.000</span>
@@ -1294,13 +1286,37 @@
             <input type="range" id="scrubber1" class="demo-scrubber" min="0" max="1000" value="0">
           </div>
           <div class="demo-controls">
-            <button class="demo-btn" id="back1">&#9664; Step</button>
+            <button class="demo-btn" id="back1">&#9664;&#9664;</button>
             <button class="demo-btn demo-btn-play" id="play1">&#9654;&nbsp;Play</button>
-            <button class="demo-btn" id="fwd1">Step &#9654;</button>
+            <button class="demo-btn" id="fwd1">&#9654;&#9654;</button>
             <select id="speed1" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
           </div>
         </div>
-        <div class="demo-chart-card" style="margin-top:12px;">
+
+        <!-- Demo 2 -->
+         <div class="demo-card" style="margin-bottom:0;">
+          <div class="demo-video-header">
+            <span class="demo-task-label">Task: <strong>"Put the pen into the cup."</strong><br><span style="font-size:0.8rem;">Platform: <strong>Single YAM</strong></span><br><span>&nbsp</span></span> 
+            <span class="demo-t-badge" id="tBadge2">t = 0.000</span>
+          </div>
+          <div class="demo-video-wrap">
+            <video id="vid2" preload="auto" muted playsinline><source src="./static/videos/single_yam_demo.mp4" type="video/mp4"></video>
+            <div class="demo-vid-cursor" id="cursor2"></div>
+          </div>
+          <div class="demo-scrubber-wrap">
+            <div class="demo-scrubber-labels"><span>t = 0</span><span style="font-size:0.75rem;color:var(--text-secondary)">← drag →</span><span>t = 1</span></div>
+            <input type="range" id="scrubber2" class="demo-scrubber" min="0" max="1000" value="0">
+          </div>
+          <div class="demo-controls">
+            <button class="demo-btn" id="back2">&#9664;&#9664;</button>
+            <button class="demo-btn demo-btn-play" id="play2">&#9654;&nbsp;Play</button>
+            <button class="demo-btn" id="fwd2">&#9654;&#9654;</button>
+            <select id="speed2" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
+          </div>
+        </div>
+
+        <!-- Demo 1 -->
+         <div class="demo-chart-card" style="margin-top:12px;">
           <div class="demo-chart-header">
             <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
             <div class="demo-legend">
@@ -1316,31 +1332,9 @@
             <div class="demo-readout"><div class="demo-readout-label">GT</div><div class="demo-readout-val" id="valGt1" style="color:#9ca3af">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barGt1" style="background:#9ca3af;width:0%"></div></div></div>
           </div>
         </div>
-      </div>
 
-      <!-- ── Demo 2 ─────────────────────────────────────────────── -->
-      <div class="demo-pair" data-id="2">
-        <div class="demo-card" style="margin-bottom:0;">
-          <div class="demo-video-header">
-            <span class="demo-task-label">Task: <strong>"Put the pen into the cup."</strong><br><span style="font-size:0.8rem;">Platform: <strong>Single YAM</strong></span></span> 
-            <span class="demo-t-badge" id="tBadge2">t = 0.000</span>
-          </div>
-          <div class="demo-video-wrap">
-            <video id="vid2" preload="auto" muted playsinline><source src="./static/videos/single_yam_demo.mp4" type="video/mp4"></video>
-            <div class="demo-vid-cursor" id="cursor2"></div>
-          </div>
-          <div class="demo-scrubber-wrap">
-            <div class="demo-scrubber-labels"><span>t = 0</span><span style="font-size:0.75rem;color:var(--text-secondary)">← drag →</span><span>t = 1</span></div>
-            <input type="range" id="scrubber2" class="demo-scrubber" min="0" max="1000" value="0">
-          </div>
-          <div class="demo-controls">
-            <button class="demo-btn" id="back2">&#9664; Step</button>
-            <button class="demo-btn demo-btn-play" id="play2">&#9654;&nbsp;Play</button>
-            <button class="demo-btn" id="fwd2">Step &#9654;</button>
-            <select id="speed2" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
-          </div>
-        </div>
-        <div class="demo-chart-card" style="margin-top:12px;">
+        <!-- Demo 2 -->
+         <div class="demo-chart-card" style="margin-top:12px;">
           <div class="demo-chart-header">
             <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
             <div class="demo-legend">
@@ -1357,7 +1351,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
