@@ -1351,6 +1351,50 @@
           </div>
         </div>
       </div>
+
+      <div style="display:contents">
+        <!-- Demo 7 -->
+        <div class="demo-card" style="margin-bottom:0;">
+          <div class="demo-video-header">
+            <span class="demo-task-label">Task: <strong>"Ride a bike down stairs."</strong></span>
+            <span class="demo-t-badge" id="tBadge7">t = 0.000</span>
+          </div>
+          <div class="demo-video-wrap">
+            <video id="vid7" preload="auto" muted playsinline><source src="./static/videos/rec.mp4" type="video/mp4"></video>
+            <div class="demo-vid-cursor" id="cursor7"></div>
+          </div>
+          <div class="demo-scrubber-wrap">
+            <div class="demo-scrubber-labels"><span>t = 0</span><span style="font-size:0.75rem;color:var(--text-secondary)">← drag →</span><span>t = 1</span></div>
+            <input type="range" id="scrubber7" class="demo-scrubber" min="0" max="1000" value="0">
+          </div>
+          <div class="demo-controls">
+            <button class="demo-btn" id="back7">&#9664;&#9664;</button>
+            <button class="demo-btn demo-btn-play" id="play7">&#9654;&nbsp;Play</button>
+            <button class="demo-btn" id="fwd7">&#9654;&#9654;</button>
+            <select id="speed7" class="demo-speed-select"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
+          </div>
+        </div>
+
+        <!-- placeholder to keep grid balanced -->
+        <div></div>
+
+        <!-- Demo 7 chart -->
+        <div class="demo-chart-card" style="margin-top:12px;">
+          <div class="demo-chart-header">
+            <span style="font-weight:600;font-size:0.88rem;">Predicted Progress</span>
+            <div class="demo-legend">
+              <span class="demo-legend-item"><span class="demo-legend-dot" style="background:#f97316"></span>TOPReward</span>
+            </div>
+          </div>
+          <div class="demo-chart-body"><canvas id="chart7"></canvas></div>
+          <div class="demo-readouts">
+            <div class="demo-readout"><div class="demo-readout-label">TOPReward</div><div class="demo-readout-val" id="valTop7" style="color:#f97316">0.000</div><div class="demo-readout-bar-bg"><div class="demo-readout-bar-fill" id="barTop7" style="background:#f97316;width:0%"></div></div></div>
+          </div>
+        </div>
+
+        <!-- placeholder to keep grid balanced -->
+        <div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1637,9 +1681,15 @@
       GVL: [[0,0],[0.052631579,0],[0.105263158,0.55],[0.157894737,0.4],[0.210526316,0.45],[0.263157895,0.3],[0.315789474,0.1],[0.368421053,0.1],[0.421052632,0.78],[0.473684211,0.7],[0.526315789,1],[0.578947368,0.2],[0.631578947,0.75],[0.684210526,0.8],[0.736842105,0.95],[0.789473684,0.95],[0.842105263,0.9],[0.894736842,0.99],[0.947368421,1],[1,1]],
       GT:  [[0,0.01],[0.071428571,0.13],[0.142857143,0.24],[0.214285714,0.36],[0.285714286,0.47],[0.357142857,0.55],[0.428571429,0.61],[0.5,0.68],[0.571428571,0.74],[0.642857143,0.8],[0.714285714,0.87],[0.785714286,0.94],[0.857142857,1],[0.928571429,1],[1,1]],
     },
+    /* Demo 7 — rec.mp4, TOPReward only */
+    {
+      TOP: [[0,0],[0.071428571,0.096774194],[0.142857143,0.532258065],[0.214285714,0.870967742],[0.285714286,0.951612903],[0.357142857,0.967741935],[0.428571429,1.0],[0.5,0.741935484],[0.571428571,0.870967742],[0.642857143,0.725806452],[0.714285714,0.758064516],[0.785714286,0.822580645],[0.857142857,0.790322581],[0.928571429,0.629032258],[1,0.564516129]],
+      GVL: null,
+      GT:  null,
+    },
   ];
 
-function lerp(data, t) {
+  function lerp(data, t) {
     if (t <= data[0][0]) return data[0][1];
     if (t >= data[data.length-1][0]) return data[data.length-1][1];
     for (let i = 0; i < data.length-1; i++) {
@@ -1683,15 +1733,18 @@ function lerp(data, t) {
         d.forEach(([t,v],i) => { const [x,y]=toPx(t,v); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
         ctx.stroke(); ctx.setLineDash([]);
       }
-      line(data.GT,  '#9ca3af', true,  1.8);
-      line(data.GVL, '#2563eb', false, 2);
+      // line(data.GT,  '#9ca3af', true,  1.8);
+      // line(data.GVL, '#2563eb', false, 2);
+      // line(data.TOP, '#f97316', false, 2.5);
+      if (data.GT)  line(data.GT,  '#9ca3af', true,  1.8);
+      if (data.GVL) line(data.GVL, '#2563eb', false, 2);
       line(data.TOP, '#f97316', false, 2.5);
       const [cx]=toPx(t,0);
       ctx.beginPath(); ctx.strokeStyle='rgba(30,41,59,0.3)'; ctx.lineWidth=1.5;
       ctx.setLineDash([4,3]); ctx.moveTo(cx,PT); ctx.lineTo(cx,CH-PB); ctx.stroke();
       ctx.setLineDash([]);
-      [[data.TOP,'#f97316'],[data.GVL,'#2563eb'],[data.GT,'#9ca3af']].forEach(([d,c]) => {
-        const v=lerp(d,t), [dx,dy]=toPx(t,v);
+      // [[data.TOP,'#f97316'],[data.GVL,'#2563eb'],[data.GT,'#9ca3af']].forEach(([d,c]) => {
+      [[data.TOP,'#f97316'],[data.GVL,'#2563eb'],[data.GT,'#9ca3af']].filter(([d])=>d).forEach(([d,c]) => {        const v=lerp(d,t), [dx,dy]=toPx(t,v);
         ctx.beginPath(); ctx.arc(dx,dy,4,0,Math.PI*2);
         ctx.fillStyle=c; ctx.fill();
         ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
@@ -1730,15 +1783,24 @@ function lerp(data, t) {
       cursor.style.left = (clampedT * 100) + '%';
 
       const tv  = lerp(data.TOP, clampedT);
-      const gv  = lerp(data.GVL, clampedT);
-      const gtv = lerp(data.GT,  clampedT);
+      // const gv  = lerp(data.GVL, clampedT);
+      // const gtv = lerp(data.GT,  clampedT);
+      const gv  = data.GVL ? lerp(data.GVL, clampedT) : 0;
+      const gtv = data.GT  ? lerp(data.GT,  clampedT)  : 0;
+
+      // document.getElementById('valTop'+n).textContent = tv.toFixed(3);
+      // document.getElementById('valGvl'+n).textContent = gv.toFixed(3);
+      // document.getElementById('valGt' +n).textContent = gtv.toFixed(3);
+      // document.getElementById('barTop'+n).style.width = (tv *100)+'%';
+      // document.getElementById('barGvl'+n).style.width = (gv *100)+'%';
+      // document.getElementById('barGt' +n).style.width = (gtv*100)+'%';
 
       document.getElementById('valTop'+n).textContent = tv.toFixed(3);
-      document.getElementById('valGvl'+n).textContent = gv.toFixed(3);
-      document.getElementById('valGt' +n).textContent = gtv.toFixed(3);
+      if (document.getElementById('valGvl'+n)) { document.getElementById('valGvl'+n).textContent = gv.toFixed(3); }
+      if (document.getElementById('valGt' +n)) { document.getElementById('valGt' +n).textContent = gtv.toFixed(3); }
       document.getElementById('barTop'+n).style.width = (tv *100)+'%';
-      document.getElementById('barGvl'+n).style.width = (gv *100)+'%';
-      document.getElementById('barGt' +n).style.width = (gtv*100)+'%';
+      if (document.getElementById('barGvl'+n)) { document.getElementById('barGvl'+n).style.width = (gv *100)+'%'; }
+      if (document.getElementById('barGt' +n)) { document.getElementById('barGt' +n).style.width = (gtv*100)+'%'; }
 
       chart.draw(clampedT);
     }
